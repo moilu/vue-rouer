@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import PokemonLayout from '@/modules/pokemon/layouts/PokemonLayout';
 import ZeldaLayout from '@/modules/zelda/layouts/ZeldaLayout';
+import isAuthenticatedGuard from './auth-guard';
 
 const routes = [
     {
@@ -37,6 +38,7 @@ const routes = [
     {
         path: '/zelda',
         name: 'zelda',
+        beforeEnter: [ isAuthenticatedGuard ],
         component: ZeldaLayout,
         children: [
             { 
@@ -65,5 +67,41 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes,
 });
+
+// Guard global - Síncrono
+// router.beforeEach((to, from, next) => {
+    // console.log(to, from, next);
+    // const random = Math.random() * 100;
+    // if( random > 50 ) {
+    //     console.log('autenticado');
+    //     next();
+    // } else {
+    //     console.log(random, 'bloqueado por el beforeEach Guard');
+    //     next({ name: 'pokemon-home' });
+    // }
+// });
+
+// const canAcces = () => {
+//     return new Promise( resolve => {
+
+//     const random = Math.random() * 100;
+
+//     if( random > 50 ) {
+//         console.log('autenticado - canAcces');
+//         resolve(true);
+//     } else {
+//         console.log(random, 'bloqueado por el beforeEach Guard - canAcces');
+//         resolve(false);
+//     }
+//     });
+// }
+
+// router.beforeEach( async(to, from, next) => {
+//     const authorized = await canAcces();
+
+//     authorized 
+//         ? next() 
+//         : next({ name: 'pokemon-home' });
+// });
 
 export default router;
