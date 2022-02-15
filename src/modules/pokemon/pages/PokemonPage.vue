@@ -1,7 +1,12 @@
 <template>
     <h1>Pokemon Page <span>#{{ id }}</span></h1>
-    <div v-if="pokemon">
+    <div v-if="pokemon" class="pokemon">
+        <span>{{ pokemon.name }}</span>
         <img :src="pokemon.sprites.front_default" :alt="pokemon.name">
+        <form @submit.prevent="getPokemon()">
+            <input v-model="newId" type="text" placeholder="Ingresa un número">
+            <button>Cargar pokemon</button>
+        </form>
     </div>
 </template>
 
@@ -16,6 +21,8 @@ export default {
     },
     data() {
         return {
+            pokemon: null,
+            newId: null
         }
     },
     created() {
@@ -23,12 +30,14 @@ export default {
     },
     methods: {
         async getPokemon() {
+            if(this.newId != null) {
+                this.$router.push(`/pokemonid/${ this.newId }`);
+            }
             try {
                 const pokemon = await fetch(`https://pokeapi.co/api/v2/pokemon/${ this.id }`).then(r => r.json());
                 console.log(pokemon);
                 this.pokemon = pokemon;
             } catch(error) {
-                console.log('No hay nada que hacer aquí');
                 this.$router.push('/');
             }
         }
@@ -40,3 +49,15 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.pokemon {
+    display: grid;
+    justify-content: center;
+}
+
+.pokemon span {
+    font-size: 2em;
+    font-weight: bold;
+}
+</style>
